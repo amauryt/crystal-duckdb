@@ -211,6 +211,7 @@ DB.connect DuckDB::IN_MEMORY do |cnn|
   timestamp = cnn.scalar "select at from event where id = 1"
   timestamp.to_time == Time::UNIX_EPOCH # => true
 end
+```
 
 ## Known issues
 

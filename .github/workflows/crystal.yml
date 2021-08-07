@@ -14,15 +14,12 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         crystal: [latest, nightly]
     runs-on: ${{ matrix.os  }}
+    env:
+      LD_LIBRARY_PATH: /home/linuxbrew/.linuxbrew/lib/
+      DYLD_LIBRARY_PATH: /usr/local/lib/
     steps:
       - name: Install duckdb
         run: brew install duckdb
-      - name: Set Linux shared library path
-        if: ${{ runner.os == 'Linux' }}
-        run: echo LD_LIBRARY_PATH=/home/linuxbrew/.linuxbrew/lib/
-      - name: Set MacOS shared library path
-        if: ${{ runner.os == 'MacOS' }}
-        run: echo DYLD_LIBRARY_PATH=/usr/local/lib/
       - name: Install Crystal
         uses: oprypin/install-crystal@v1
         with:

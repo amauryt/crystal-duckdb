@@ -1,0 +1,17 @@
+name: duckdb
+version: 0.1.0
+
+dependencies:
+  db:
+    github: crystal-lang/crystal-db
+    version: ~> 0.10.0
+
+crystalline:
+    main: src/duckdb.cr
+
+authors:
+  - Amaury Trujillo
+
+crystal: ">=1.0.0"
+
+license: MIT

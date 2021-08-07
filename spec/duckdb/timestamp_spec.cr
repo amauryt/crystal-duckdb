@@ -12,7 +12,7 @@ describe DuckDB::Timestamp do
     it "initializes from a Time instance" do
       time = Time.utc
       timestamp = DuckDB::Timestamp.new(time)
-      timestamp.to_time.should eq time
+      timestamp.to_time.should be_close(time, 1.second)
     end
 
     it "initializes from a string" do

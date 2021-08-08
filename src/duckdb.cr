@@ -1,5 +1,4 @@
 require "db"
-require "db/spec"
 require "./duckdb/**"
 
 module DuckDB

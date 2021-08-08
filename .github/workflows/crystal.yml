@@ -11,11 +11,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
         crystal: [latest, nightly]
     runs-on: ${{ matrix.os  }}
     env:
-      LD_LIBRARY_PATH: /home/linuxbrew/.linuxbrew/lib/
       DYLD_LIBRARY_PATH: /usr/local/lib/
     steps:
       - name: Install duckdb

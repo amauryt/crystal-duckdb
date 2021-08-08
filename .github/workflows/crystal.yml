@@ -19,7 +19,9 @@ jobs:
       DYLD_LIBRARY_PATH: /usr/local/lib/
     steps:
       - name: Install duckdb
-        run: brew install duckdb
+        run: |
+          brew update
+          brew install duckdb
       - name: Install Crystal
         uses: oprypin/install-crystal@v1
         with:

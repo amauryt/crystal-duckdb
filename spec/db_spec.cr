@@ -44,10 +44,8 @@ DB::DriverSpecs(DuckDB::Any).run do
   sample_value 1_i16, "SMALLINT", "1", type_safe_value: false
   sample_value 1, "INTEGER", "1", type_safe_value: false
   sample_value 1_i64, "BIGINT", "1", type_safe_value: false
-  # FIXME: At the moment the binding functions for UInt8 and UInt16 have a typo in the signature
-  # See: https://github.com/duckdb/duckdb/issues/2105
-  # sample_value 1_u8, "UTINYINT", "1", type_safe_value: false
-  # sample_value 1_u16, "USMALLINT", "1", type_safe_value: false
+  sample_value 1_u8, "UTINYINT", "1", type_safe_value: false
+  sample_value 1_u16, "USMALLINT", "1", type_safe_value: false
   sample_value 1_u32, "UINTEGER", "1", type_safe_value: false
   sample_value 1_u64, "UBIGINT", "1", type_safe_value: false
   sample_value "hello", "VARCHAR", "'hello'", type_safe_value: true

@@ -215,7 +215,7 @@ end
 
 ## Known issues
 
-For DuckDB v0.2.8 binding `UInt8` and `UInt16` values to prepared statements currently causes a crash due to a typo in the C header file. See [this issue](https://github.com/duckdb/duckdb/issues/2105) for more information.
+For DuckDB v0.2.8 binding `UInt8` and `UInt16` values to prepared statements causes a crash due to a typo in the C header file. This is already fixed for later versions. See [this issue](https://github.com/duckdb/duckdb/issues/2105) for more information.
 
 ## Contributing
 

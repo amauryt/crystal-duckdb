@@ -42,11 +42,15 @@ struct DuckDB::TimeOfDay
     @microsecond = time.nanosecond // 1000
   end
 
-  protected def initialize(time : LibDuckDB::Time)
-    @hour = time.hour.to_i32
-    @minute = time.min.to_i32
-    @second = time.sec.to_i32
-    @microsecond = time.micros.to_i32
+  # Initialize with microseconds since 00:00:00
+  # NOTE: It raises `ArgumentError` unless `microseconds` represent less than one day. 
+  def initialize(microseconds : Int64)
+    span = Time::Span.new(nanoseconds: microseconds * 1000)
+    raise ArgumentError.new("The value of microseconds must represent less than one day.") if span.days >= 1
+    @hour = span.hours
+    @minute = span.minutes
+    @second = span.seconds
+    @microsecond = span.nanoseconds // 1000
   end
 
   def millisecond
@@ -80,10 +84,7 @@ struct DuckDB::TimeOfDay
   # :nodoc:
   def to_unsafe
     time = LibDuckDB::Time.new
-    time.hour = @hour.as(Int8)
-    time.min = @minute.as(Int8)
-    time.sec = @second.as(Int8)
-    time.micros = @microsecond.as(Int16)
+    time.micros = self.to_span.total_microseconds.to_i64
     time
   end
 end

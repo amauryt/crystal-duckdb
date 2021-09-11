@@ -49,11 +49,17 @@ class DuckDB::Statement < DB::Statement
     check LibDuckDB.bind_varchar(self, index, value)
   end
 
-  {% for name in ["Timestamp", "Date", "TimeOfDay"] %}
-    private def bind_arg(index, value : {{name.id}})
-      check LibDuckDB.bind_varchar(self, index, value.to_s)
-    end
-  {% end %}
+  private def bind_arg(index, value : Date)
+    check LibDuckDB.bind_date(self, index, value)
+  end
+
+  private def bind_arg(index, value : TimeOfDay)
+    check LibDuckDB.bind_time(self, index, value)
+  end
+
+  private def bind_arg(index, value : Timestamp)
+    check LibDuckDB.bind_timestamp(self, index, value)
+  end
 
   private def bind_arg(index, value : Time)
     bind_arg(index, Timestamp.new(value))

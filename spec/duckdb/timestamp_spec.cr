@@ -20,6 +20,21 @@ describe DuckDB::Timestamp do
       timestamp = DuckDB::Timestamp.new(time.to_s(DuckDB::TIMESTAMP_FORMAT_SECOND))
       timestamp.to_time.should be_close(time, 1.second)
     end
+
+    it "initializes from a date and a time_of_day instances" do
+      time = Time.utc
+      date = DuckDB::Date.new(time)
+      time_of_day = DuckDB::TimeOfDay.new(time)
+      timestamp = DuckDB::Timestamp.new(date, time_of_day)
+      timestamp.to_time.should be_close(time, 1.second)
+    end
+
+    it "initializes from a number of microseconds since UNIX_EPOCH" do
+      time = Time.utc
+      microseconds = (time - Time::UNIX_EPOCH).total_microseconds.to_i64
+      timestamp = DuckDB::Timestamp.new(microseconds)
+      timestamp.to_time.should be_close(time, 1.second)
+    end
   end
 
   describe "#to_s" do

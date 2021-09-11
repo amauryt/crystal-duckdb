@@ -26,15 +26,12 @@ describe DuckDB::Date do
       test_date_and_time_equality
     end
 
-    it "initializes from a LibDuckDB::Date instance" do
-      lib_date = DuckDB::LibDuckDB::Date.new
-      lib_date.year = 2000
-      lib_date.month = 2_i8
-      lib_date.day = 1_i8
-      date = DuckDB::Date.new(lib_date)
-      date.year.should eq lib_date.year
-      date.month.should eq lib_date.month
-      date.day.should eq lib_date.day
+    it "initializes from a a number of days sinc Unix epoch" do
+      days = 2
+      date = DuckDB::Date.new(days)
+      date.year.should eq 1970
+      date.month.should eq 1
+      date.day.should eq 3
     end
   end
 

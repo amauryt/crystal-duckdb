@@ -59,12 +59,20 @@ class DuckDB::Appender
     self
   end
 
-  {% for name in ["Timestamp", "Date", "TimeOfDay"] %}
-    def <<(value : {{name.id}})
-      check LibDuckDB.append_varchar(self, value.to_s), value
-      self
-    end
-  {% end %}
+  def <<(value : Date)
+    check LibDuckDB.append_date(self, value), value
+    self
+  end
+
+  def <<(value : TimeOfDay)
+    check LibDuckDB.append_time(self, value), value
+    self
+  end
+
+  def <<(value : Timestamp)
+    check LibDuckDB.append_timestamp(self, value), value
+    self
+  end
 
   def <<(value : Bytes)
     check LibDuckDB.append_blob(self, value, value.size), value

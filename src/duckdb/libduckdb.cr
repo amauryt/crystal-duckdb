@@ -56,22 +56,20 @@ module DuckDB
       BLOB
     end
 
+
     struct Date
-      year : Int32
-      month : Int8
-      day : Int8
+      # Days are stored as days since 1970-01-01
+      days : Int32
     end
 
     struct Time
-      hour : Int8
-      min : Int8
-      sec : Int8
-      micros : Int32
+      # Time is stored as microseconds since 00:00:00
+      micros : Int64
     end
 
     struct Timestamp
-      date : Date
-      time : Time
+      # Time is stored as microseconds since 1970-01-01
+      micros : Int64
     end
 
     struct Interval
@@ -155,6 +153,12 @@ module DuckDB
     fun value_float = duckdb_value_float(result : Result*, col : Idx, row : Idx) : Float32
     # Converts the specified value to a double. Returns 0.0 on failure or NULL.
     fun value_double = duckdb_value_double(result : Result*, col : Idx, row : Idx) : Float64
+    # Converts the specified value to a date. Returns 0 on failure.
+    fun value_date = duckdb_value_date(result : Result*, col : Idx, row : Idx) : Date
+    # Converts the specified value to a time. Returns 0 on failure.
+    fun value_time = duckdb_value_time(result : Result*, col : Idx, row : Idx) : Time
+    # Converts the specified value to a timestamp. Returns 0 on failure.
+    fun value_timestamp = duckdb_value_timestamp(result : Result*, col : Idx, row : Idx) : Timestamp
     # Converts the specified value to a string. Returns nullptr on failure or NULL. The result must be freed with `free`.
     fun value_varchar = duckdb_value_varchar(result : Result*, col : Idx, row : Idx) : LibC::Char*
     # Fetches a blob from a result set column. Returns a blob with blob.data set to nullptr on failure or NULL. The
@@ -188,6 +192,10 @@ module DuckDB
     fun bind_uint64 = duckdb_bind_uint64(prepared_statement : PreparedStatement, param_idx : Idx, val : UInt64) : State
     fun bind_float = duckdb_bind_float(prepared_statement : PreparedStatement, param_idx : Idx, val : Float32) : State
     fun bind_double = duckdb_bind_double(prepared_statement : PreparedStatement, param_idx : Idx, val : Float64) : State
+    fun bind_date = duckdb_bind_date(prepared_statement : PreparedStatement, param_idx : Idx, val : Date) : State
+    fun bind_time = duckdb_bind_time(prepared_statement : PreparedStatement, param_idx : Idx, val : Time) : State
+    fun bind_timestamp = duckdb_bind_timestamp(prepared_statement : PreparedStatement, param_idx : Idx, val : Timestamp) : State
+    fun bind_interval = duckdb_bind_interval(prepared_statement : PreparedStatement, param_idx : Idx, val : Interval) : State
     fun bind_varchar = duckdb_bind_varchar(prepared_statement : PreparedStatement, param_idx : Idx, val : LibC::Char*) : State
     fun bind_varchar_length = duckdb_bind_varchar_length(prepared_statement : PreparedStatement, param_idx : Idx, val : LibC::Char*, length : Idx) : State
     fun bind_blob = duckdb_bind_blob(prepared_statement : PreparedStatement, param_idx : Idx, data : Void*, length : Idx) : State
@@ -219,6 +227,11 @@ module DuckDB
 
     fun append_float = duckdb_append_float(appender : Appender, value : Float32) : State
     fun append_double = duckdb_append_double(appender : Appender, value : Float64) : State
+
+    fun append_date = duckdb_append_date(appender : Appender, value : Date) : State
+    fun append_time = duckdb_append_time(appender : Appender, value : Time) : State
+    fun append_timestamp = duckdb_append_timestamp(appender : Appender, value : Timestamp) : State
+    fun append_interval = duckdb_append_interval(appender : Appender, value : Interval) : State
 
     fun append_varchar = duckdb_append_varchar(appender : Appender, val : LibC::Char*) : State
     fun append_varchar_length = duckdb_append_varchar_length(appender : Appender, val : LibC::Char*, length : Idx) : State

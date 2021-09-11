@@ -33,9 +33,12 @@ struct DuckDB::Timestamp
     @time_of_day = TimeOfDay.new(strings[1])
   end
 
-  protected def initialize(timestamp : LibDuckDB::Timestamp)
-    @date = Date.new(timestamp.date)
-    @time_of_day = TimeOfDay.new(timestamp.time)
+  # Initialize with microseconds since `Time::UNIX_EPOCH`
+  def initialize(microseconds : Int64)
+    span = Time::Span.new(nanoseconds: microseconds * 1000)
+    time = Time::UNIX_EPOCH + span
+    @date = Date.new(time)
+    @time_of_day = TimeOfDay.new(time)
   end
 
   def ==(other : self) : Bool
@@ -63,8 +66,7 @@ struct DuckDB::Timestamp
   # :nodoc:
   def to_unsafe
     timestamp = LibDuckDB::Timestamp.new
-    timestamp.date = @date
-    timestamp.time = @time_of_day
+    timestamp.micros = (self.to_time - Time::UNIX_EPOCH).total_microseconds.to_i64
     timestamp
   end
 end

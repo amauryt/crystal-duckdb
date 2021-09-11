@@ -7,7 +7,6 @@ class DuckDB::ResultSet < DB::ResultSet
   end
 
   macro duckdb_unbox(from, to)
-    puts column.data.to_s
     {{to}}.new(Box({{from}}).unbox(column.data))
   end
 
@@ -69,16 +68,15 @@ class DuckDB::ResultSet < DB::ResultSet
       when .double?
         duckdb_value("double")
       when .boolean?
-        puts duckdb_value("boolean")
         duckdb_value("boolean") != 0
       when .varchar?
         duckdb_set_string
       when .timestamp?
-        Timestamp.new duckdb_set_string
+        Timestamp.new duckdb_value("timestamp").micros
       when .date?
-        Date.new duckdb_set_string
+        Date.new duckdb_value("date").days
       when .time?
-        TimeOfDay.new duckdb_set_string
+        TimeOfDay.new duckdb_value("time").micros
       else
         # Treat non supported types as strings
         duckdb_set_string

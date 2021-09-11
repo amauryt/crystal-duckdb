@@ -33,6 +33,12 @@ describe DuckDB::TimeOfDay do
         DuckDB::TimeOfDay.new(span)
       end
     end
+    it "initializes from a number of microseconds" do
+      span = Time::Span.new(hours: 12, minutes: 30, seconds: 5, nanoseconds: 999_000_000)
+      microseconds = span.total_microseconds.to_i64
+      time_of_day = DuckDB::TimeOfDay.new(microseconds)
+      test_time_of_day_and_time_span_equality
+    end
   end
 
   describe "#to_s" do

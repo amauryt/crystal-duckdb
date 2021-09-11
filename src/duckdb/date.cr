@@ -24,10 +24,12 @@ struct DuckDB::Date
     @day = time.day
   end
 
-  protected def initialize(date : LibDuckDB::Date)
-    @year = date.year
-    @month = date.month.to_i32
-    @day = date.day.to_i32
+  # Days since `Time::UNIX_EPOCH`
+  def initialize(days : Int32)
+    time = Time::UNIX_EPOCH + Time::Span.new(days: days)
+    @year = time.year
+    @month = time.month
+    @day = time.day
   end
 
   def ==(other : self) : Bool
@@ -47,9 +49,7 @@ struct DuckDB::Date
   # :nodoc:
   def to_unsafe
     date = LibDuckDB::Date.new
-    dtate.year = @year
-    date.month = @month.as(Int8)
-    date.day = @day.as(Int8)
+    date.days = (self.to_time - Time::UNIX_EPOCH).days
     date
   end
 end

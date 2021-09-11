@@ -73,7 +73,7 @@ class DuckDB::ResultSet < DB::ResultSet
         duckdb_value("boolean") != 0
       when .varchar?
         duckdb_set_string
-      when .timestamp?, .timestamp_ns?, .timestamp_ms?
+      when .timestamp?
         Timestamp.new duckdb_set_string
       when .date?
         Date.new duckdb_set_string

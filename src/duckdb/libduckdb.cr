@@ -43,9 +43,6 @@ module DuckDB
       DOUBLE
       # Treated as `Time`.
       TIMESTAMP
-      TIMESTAMP_S
-      TIMESTAMP_NS
-      TIMESTAMP_MS
       # Treated as `DuckDB::Date`.
       DATE
       # Treated as `DuckDB::TimeOfDay`.

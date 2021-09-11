@@ -6,17 +6,24 @@ Crystal bindings for [DuckDB](https://duckdb.org/), an in-process SQL OLAP datab
 
 Check [crystal-db](https://github.com/crystal-lang/crystal-db) for general DB driver documentation. This shard's driver is registered under the `duckdb://` URI.
 
+## DuckDB compatibility
+
+DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine.
+
+| Shard release   | DuckDB engine |
+| --------------- | ------------- |
+| 0.2.x           | 0.2.9         |
+| 0.1.x           | 0.2.8         |
+
 ## Project status
 
-This is an initial implementation primarily intended to fulfill my needs for Online Analytical Processing (OLAP) using DuckDB. My main use case is to efficiently transfer values from Crystal, via the append functionality of DuckDB, in order to populate a larger-than-memory database with which to do exploratory data analysis in [R](https://www.r-project.org/). Obviously this could be also be extended to Python or any other language with a DuckDB client. Therefore, at the moment it only a subset of the DuckDB C API is implemented, but it should enough for many OLAP applications in Crystal.
+This is an early-stage implementation primarily intended to fulfill my needs for Online Analytical Processing (OLAP) using DuckDB. My main use case is to efficiently transfer values from Crystal, via the append functionality of DuckDB, in order to populate a larger-than-memory database with which to do exploratory data analysis in [R](https://www.r-project.org/). Obviously this could be also be extended to Python or any other language with a DuckDB client. Therefore, at the moment it only a subset of the DuckDB C API is implemented, but it should enough for many OLAP applications in Crystal.
 
 Please note that OLAP workloads and workflows are very different from OLTP (Online Transaction Processing), especially in an embedded context. Before using DuckDB be sure to understand the differences between the two to decide which option is more apt for your use case.
 
-Finally, take into consideration that DuckDB is a relatively young but highly exciting project. A stable version is yet to be reached and in the meantime **breaking changes are expected**.
-
 ## Prerequisites
 
-You must have the **DuckDB engine v0.2.8** installed and available as a dynamic library within your app.
+You must have a **compatible DuckDB engine** installed and available as a dynamic library within your app.
 
 For MacOS the simplest way to install DuckDB is via homebrew:
 
@@ -32,7 +39,7 @@ brew install duckdb
    dependencies:
      duckdb:
        github: amauryt/crystal-duckdb
-       version: ~> 0.1.0
+       version: ~> 0.2.0
    ```
 
 2. Run `shards install`
@@ -82,7 +89,7 @@ end
 ### Appender
 
 To efficiently load bulk data a table use the appender instead of insert statements.
-The [Appender](https://duckdb.org/docs/data/appender) is tied to a connection, and will use the transaction context of that connection when appending.
+The [Appender](https://duckdb.org/docs/api/c/appender) is tied to a connection, and will use the transaction context of that connection when appending.
 An Appender always appends to a single table in the database.
 
 ```crystal

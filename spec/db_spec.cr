@@ -15,7 +15,7 @@ end
 
 private def cast_if_necessary(expr, sql_type)
   case sql_type
-  when "DATE", "TIME", "TIMESTAMP"
+  when "DATE", "TIME", "TIMESTAMP", "BLOB"
     "cast(#{expr} as #{sql_type})"
   else
     expr
@@ -56,6 +56,9 @@ DB::DriverSpecs(DuckDB::Any).run do
   sample_value timestamp, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false
   sample_value DuckDB::TimeOfDay.new(10, 11, 12), "TIME", "'10:11:12'", type_safe_value: false # second
   sample_value timestamp.to_time, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false
+
+  ary = UInt8[0x44, 0x75, 0x63, 0x6b, 0x44, 0x42]
+  sample_value Bytes.new(ary.to_unsafe, ary.size), "BLOB", "'DuckDB'" # , type_safe_value: false
 
   binding_syntax do |index|
     "?"

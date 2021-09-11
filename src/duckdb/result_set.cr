@@ -71,6 +71,12 @@ class DuckDB::ResultSet < DB::ResultSet
         duckdb_value("boolean") != 0
       when .varchar?
         duckdb_set_string
+      when .blob?
+        blob = duckdb_value("blob")
+        bytes = Bytes.new(blob.size)
+        bytes.copy_from(blob.data.as(UInt8*), blob.size)
+        LibDuckDB.free(blob.data)
+        bytes
       when .timestamp?
         Timestamp.new duckdb_value("timestamp").micros
       when .date?

@@ -128,6 +128,7 @@ The following DuckDB [SQL datatypes](https://duckdb.org/docs/sql/data_types/over
 | `Float32`           | FLOAT               |
 | `Float64`           | DOUBLE              |
 | `String`            | VARCHAR             |
+| `Bytes`             | BLOB                |
 | `DuckDB::Date`      | DATE                |
 | `DuckDB::TimeOfDay` | TIME                |
 | `DuckDB::Timestamp` | TIMESTAMP           |

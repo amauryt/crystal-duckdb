@@ -163,7 +163,7 @@ module DuckDB
     fun value_varchar = duckdb_value_varchar(result : Result*, col : Idx, row : Idx) : LibC::Char*
     # Fetches a blob from a result set column. Returns a blob with blob.data set to nullptr on failure or NULL. The
     # resulting "blob.data" must be freed with duckdb_free.
-    fun value_blob = duckdb_value_blob(result : Result*, col : Idx, row : Idx) : Blob*
+    fun value_blob = duckdb_value_blob(result : Result*, col : Idx, row : Idx) : Blob
 
     # # Memory allocation
 

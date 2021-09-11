@@ -69,7 +69,7 @@ class DuckDB::ResultSet < DB::ResultSet
       when .double?
         duckdb_value("double")
       when .boolean?
-        # puts Box(LibDuckDB::CBool).unbox(column.data)
+        puts duckdb_value("boolean")
         duckdb_value("boolean") != 0
       when .varchar?
         duckdb_set_string

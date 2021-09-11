@@ -28,7 +28,7 @@ class DuckDB::Statement < DB::Statement
   end
 
   private def bind_arg(index, value : Bool)
-    check LibDuckDB.bind_boolean(self, index, value)
+    check LibDuckDB.bind_boolean(self, index, value ? 1_u8 : 0_u8)
   end
 
   {% for name in ["Int8", "Int16", "Int32", "Int64", "UInt8", "UInt16", "UInt32", "UInt64"] %}

@@ -1,7 +1,7 @@
 module DuckDB
   @[Link("duckdb")]
   lib LibDuckDB
-    alias CBool = LibC::Int
+    alias CBool = UInt8
 
     alias Idx = UInt64
     type Database = Void*
@@ -92,9 +92,10 @@ module DuckDB
 
     struct Column
       data : Void*
-      nullmask : UInt8*
+      nullmask : CBool*
       type : Type
       name : LibC::Char*
+      internal_data : Void*
     end
 
     struct Result
@@ -103,6 +104,7 @@ module DuckDB
       rows_changed : Idx
       columns : Column*
       error_message : LibC::Char*
+      internal_data : Void*
     end
 
     # # NOTE: ARROW FUNCTIONS NOT IMPLEMENTED

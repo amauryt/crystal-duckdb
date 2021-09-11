@@ -25,7 +25,7 @@ class DuckDB::Appender
   end
 
   def <<(value : Bool)
-    check LibDuckDB.append_bool(self, value), value
+    check LibDuckDB.append_bool(self, value ? 1_u8 : 0_u8), value
     self
   end
 

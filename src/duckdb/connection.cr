@@ -17,7 +17,6 @@ class DuckDB::Connection < DB::Connection
   def appender(table_name, &block)
     appender = Appender.new(self, table_name)
     yield appender
-    appender.flush
     appender.close
   end
 

@@ -8,12 +8,12 @@ Check [crystal-db](https://github.com/crystal-lang/crystal-db) for general DB dr
 
 ## DuckDB compatibility
 
-DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine.
+DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file storage incompability across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [documentation](https://duckdb.org/docs/sql/statements/export) for more details. 
 
-| Shard release   | DuckDB engine |
-| --------------- | ------------- |
-| 0.2.x           | 0.2.9         |
-| 0.1.x           | 0.2.8         |
+| Shard release   | DuckDB engine | Notes                                       |
+| --------------- | ------------- | --------------------------------------------|
+| 0.2.x           | 0.2.9 – 0.3.0 | Storage incompability across DuckDB engines |
+| 0.1.x           | 0.2.8         |                                             |
 
 ## Project status
 

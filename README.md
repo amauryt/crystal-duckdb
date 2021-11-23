@@ -12,7 +12,7 @@ DuckDB is a relatively young but highly exciting project. However, a stable vers
 
 | Shard release   | DuckDB engine | Notes                                       |
 | --------------- | ------------- | --------------------------------------------|
-| 0.2.x           | 0.2.9 – 0.3.0 | Storage incompability across DuckDB engines |
+| 0.2.x           | 0.2.9 – 0.3.1 | Storage incompability across DuckDB engines |
 | 0.1.x           | 0.2.8         |                                             |
 
 ## Project status

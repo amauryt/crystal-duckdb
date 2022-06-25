@@ -109,6 +109,10 @@ class DuckDB::ResultSet < DB::ResultSet
     p.null? ? "" : String.new(p)
   end
 
+  def next_column_index : Int32
+    @column_index <= column_count ? @column_index : column_count
+  end
+
   protected def row_count
     LibDuckDB.row_count(self).to_i64
   end

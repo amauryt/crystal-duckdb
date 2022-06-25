@@ -8,12 +8,13 @@ Check [crystal-db](https://github.com/crystal-lang/crystal-db) for general DB dr
 
 ## DuckDB compatibility
 
-DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file storage incompability across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [documentation](https://duckdb.org/docs/sql/statements/export) for more details. 
+DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file *storage incompability* across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [documentation](https://duckdb.org/docs/sql/statements/export) for more details. 
 
-| Shard release   | DuckDB engine | Notes                                       |
-| --------------- | ------------- | --------------------------------------------|
-| 0.2.x           | 0.2.9 – 0.3.2 | Storage incompability across DuckDB engines |
-| 0.1.x           | 0.2.8         |                                             |
+| Shard release   | DuckDB engine | Notes                                                 |
+| --------------- | ------------- | ----------------------------------------------------- |
+| 0.2.1           | 0.3.4         | Storage incompability. Updated `crystal-db` to v0.11. |
+| 0.2.0           | 0.2.9 – 0.3.2 | Storage incompability.                                |
+| 0.1.x           | 0.2.8         |                                                       |
 
 ## Project status
 
@@ -39,7 +40,7 @@ brew install duckdb
    dependencies:
      duckdb:
        github: amauryt/crystal-duckdb
-       version: ~> 0.2.0
+       version: ~> 0.2.1
    ```
 
 2. Run `shards install`
@@ -223,7 +224,10 @@ end
 
 ## Known issues
 
-For DuckDB v0.2.8 binding `UInt8` and `UInt16` values to prepared statements causes a crash due to a typo in the C header file. This is already fixed for later versions. See [this issue](https://github.com/duckdb/duckdb/issues/2105) for more information.
+* DuckDB v0.3.3 was a short-lived version —with v0.3.4 being a bug fix relase for it— hence there is no corresponding shard version.
+
+* For DuckDB v0.2.8 binding `UInt8` and `UInt16` values to prepared statements causes a crash due to a typo in the C header file. This is already fixed for later versions. See [this issue](https://github.com/duckdb/duckdb/issues/2105) for more information.
+
 
 ## Contributing
 

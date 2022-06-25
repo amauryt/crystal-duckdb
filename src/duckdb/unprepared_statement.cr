@@ -9,7 +9,7 @@ class DuckDB::UnpreparedStatement < DB::Statement
 
   protected def perform_exec(args : Enumerable) : DB::ExecResult
     result = perform_query_or_exec(args)
-    DB::ExecResult.new result.row_count.to_i64, result.row_count.to_i64
+    DB::ExecResult.new result.rows_changed.to_i64, result.rows_changed.to_i64
   end
 
   protected def duckdb_connection

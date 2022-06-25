@@ -53,7 +53,19 @@ module DuckDB
       HUGEINT
       # Treated as `String`.
       VARCHAR
+      # Treated as `Bytes`.
       BLOB
+      ## The following types are not used but are included for completeness
+      DECIMAL
+      TIMESTAMP_S
+      TIMESTAMP_MS
+      TIMESTAMP_NS
+      ENUM
+      LIST
+      STRUCT
+      MAP
+      UUID
+      JSON
     end
 
 
@@ -81,6 +93,12 @@ module DuckDB
     struct HugeInt
       lower : UInt64
       upper : Int64
+    end
+
+    struct Decimal
+      width : UInt8
+      scale : UInt8
+      value : HugeInt
     end
 
     struct Blob
@@ -127,6 +145,26 @@ module DuckDB
     # the column names will automatically be destroyed when the result is destroyed.
     fun column_name = duckdb_column_name(result : Result*, col : Idx) : LibC::Char*
 
+    # Returns the column type of the specified column :
+    # Returns `INVALID` if the column is out of range.
+    fun column_type = duckdb_column_type(result : Result*, col : Idx) : Type
+
+    # Returns the number of columns present in the result object.
+    fun column_count = duckdb_column_count(result : Result*) : Idx
+
+    # Returns the number of rows present in the result object.
+    fun row_count = duckdb_row_count(result : Result*) : Idx
+
+    # Returns the number of rows changed by the query stored in the result.
+    # This is relevant only for INSERT/UPDATE/DELETE queries.
+    # For other queries the rows_changed will be 0.
+    fun rows_changed = duckdb_rows_changed(result : Result*) : Idx
+
+    # Returns the error message contained within the result.
+    # The error is only set if `duckdb_query` returns `DuckDBError`.
+    fun result_error = duckdb_result_error(result : Result*) : LibC::Char*
+
+
     # # SAFE fetch functions
     # These functions will perform conversions if necessary. On failure (e.g. if conversion cannot be performed) a special
     # value is returned.
@@ -164,6 +202,8 @@ module DuckDB
     # Fetches a blob from a result set column. Returns a blob with blob.data set to nullptr on failure or NULL. The
     # resulting "blob.data" must be freed with duckdb_free.
     fun value_blob = duckdb_value_blob(result : Result*, col : Idx, row : Idx) : Blob
+    # Returns true if the value at the specified index is NULL, and false otherwise.
+    fun value_is_null = duckdb_value_is_null(result : Result*, col : Idx, row : Idx) : CBool
 
     # # Memory allocation
 

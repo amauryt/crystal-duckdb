@@ -31,20 +31,21 @@ class DuckDB::ResultSet < DB::ResultSet
 
   def move_next : Bool
     @row_index += 1
-    return false if @row_index >= @result.row_count
+    return false if @row_index >= row_count
     @column_index = 0
     true
   end
 
   def read
-    column = @result.columns[@column_index]
-    unless column.nullmask[@row_index].zero?
+
+    unless duckdb_value("is_null").zero?
       @column_index += 1
       return nil
     end
 
-    value =
-      case column.type
+    column_type = LibDuckDB.column_type(self, @column_index)
+
+    value = case column_type
       when .invalid?
         raise Exception.new("Invalid column type at row #{@row_index} and column #{@column_index}")
       when .tinyint?
@@ -100,19 +101,20 @@ class DuckDB::ResultSet < DB::ResultSet
   end
 
   def column_count : Int32
-    @result.column_count.to_i32
+    LibDuckDB.column_count(self).to_i32
   end
 
   def column_name(index : Int32) : String
-    String.new LibDuckDB.column_name(pointerof(@result), index)
+    p = LibDuckDB.column_name(self, index)
+    p.null? ? "" : String.new(p)
   end
 
   protected def row_count
-    @result.row_count
+    LibDuckDB.row_count(self).to_i64
   end
 
   protected def rows_changed
-    @result.rows_changed
+    LibDuckDB.rows_changed(self).to_i64
   end
 
   protected def duckdb_statement
@@ -125,10 +127,12 @@ class DuckDB::ResultSet < DB::ResultSet
 
   private def check(state : LibDuckDB::State)
     unless state.success?
-      message = if @result.error_message.null?
+      message_p = LibDuckDB.result_error(self)
+
+      message = if message_p.null?
                   "Error with command `#{@statement.command}`"
                 else
-                  String.new(@result.error_message)
+                  String.new(message_p)
                 end
       raise Exception.new(message)
     end

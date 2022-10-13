@@ -65,6 +65,10 @@ class DuckDB::Statement < DB::Statement
     bind_arg(index, Timestamp.new(value))
   end
 
+  private def bind_arg(index, value : Interval)
+    check LibDuckDB.bind_interval(self, index, value)
+  end
+
   private def bind_arg(index, value : Bytes)
     check LibDuckDB.bind_blob(self, index, value, value.size)
   end

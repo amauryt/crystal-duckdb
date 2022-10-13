@@ -197,6 +197,8 @@ module DuckDB
     fun value_time = duckdb_value_time(result : Result*, col : Idx, row : Idx) : Time
     # Converts the specified value to a timestamp. Returns 0 on failure.
     fun value_timestamp = duckdb_value_timestamp(result : Result*, col : Idx, row : Idx) : Timestamp
+    # Converts the specified value to a interval. Returns 0 on failure.
+    fun value_interval = duckdb_value_interval(result : Result*, col : Idx, row : Idx) : Interval
     # Converts the specified value to a string. Returns nullptr on failure or NULL. The result must be freed with `free`.
     fun value_varchar = duckdb_value_varchar(result : Result*, col : Idx, row : Idx) : LibC::Char*
     # Fetches a blob from a result set column. Returns a blob with blob.data set to nullptr on failure or NULL. The

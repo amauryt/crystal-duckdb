@@ -84,6 +84,9 @@ class DuckDB::ResultSet < DB::ResultSet
         Date.new duckdb_value("date").days
       when .time?
         TimeOfDay.new duckdb_value("time").micros
+      when .interval?
+        lib_i = duckdb_value("interval")
+        Interval.new lib_i.micros, lib_i.days, lib_i.months
       else
         # Treat non supported types as strings
         duckdb_set_string

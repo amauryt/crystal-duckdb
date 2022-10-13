@@ -74,6 +74,11 @@ class DuckDB::Appender
     self
   end
 
+  def <<(value : Interval)
+    check LibDuckDB.append_interval(self, value), value
+    self
+  end
+
   def <<(value : Bytes)
     check LibDuckDB.append_blob(self, value, value.size), value
     self

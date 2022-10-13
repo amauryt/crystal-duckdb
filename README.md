@@ -140,6 +140,7 @@ The following DuckDB [SQL datatypes](https://duckdb.org/docs/sql/data_types/over
 | `DuckDB::Date`      | DATE                |
 | `DuckDB::TimeOfDay` | TIME                |
 | `DuckDB::Timestamp` | TIMESTAMP           |
+| `DuckDB::Interval`  | INTERVAL            |
 
 
 All other DuckDB SQL datatypes are treated as `String`.
@@ -152,9 +153,10 @@ Given the differences between time-related standard Crystal structs and DuckDB S
 
 Please note the following:
 
-* As DuckDB does not support timezones, all Crystal's `Time` instances **must be in UTC**
+* As DuckDB does not support timezones without an extension, all Crystal's `Time` instances **must be in UTC**
 * Crystal's `Time` and `Time::Span` resolutions are in nanoseconds while DuckDB's 'TIME' is in microseconds, thus beware of **loss of precision while converting between structs** (where integer division is used)
 * Creating a new `DuckDB::TimeOfDay` from a `Time::Span` greater or equal than a day raises `DuckDB::Exception`
+* Converting a `DuckDB::Interval` with a non-zero month value to `Time::Span` without specifying the number of days per month raises `DuckDB::Exception`
 
 ```crystal
 require "duckdb"
@@ -191,6 +193,17 @@ timestamp.to_time == time                                   # => true
 # Expected getters are delegated to date and time of_day
 timestamp.year # => 1999
 timestamp.hour # => 10
+
+interval = DuckDB::Interval.new(0, 1, 2)
+interval.months # => 2
+interval.days # => 1
+interval.microseconds # => 0
+# non-zero value for months; must indicate days per month while converting to Time::Span
+interval.to_span(30) # => 61.00:00:00
+interval.to_span(31) # => 63.00:00:00
+interval.to_span(0) # => 1.00:00:00
+interval.to_month_span # => Time::MonthSpan(@value=2)
+interval.to_spans # => {1.00:00:00, Time::MonthSpan(@value=2)}
 ```
 
 For covenience you can also use `Time` to read from a result set, and a `Time` instance (in UTC) to bind to a prepared statement or append to a row; in this case it is automatically converted to `DuckDB::Timestamp`. However, when only reading a timestamp scalar you should use `#to_time` after reading the value in order to get a `Time` instance.

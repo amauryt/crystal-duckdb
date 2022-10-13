@@ -52,6 +52,26 @@ describe DuckDB::ResultSet do
     end
   end
 
+  it "reads interval times" do
+    with_cnn do |cnn|
+      cnn.exec "CREATE TABLE test_table (test_interval INTERVAL)"
+      cnn.exec "INSERT INTO test_table (test_interval) values (INTERVAL '1 YEAR')"
+      cnn.exec "INSERT INTO test_table (test_interval) values (?)", Interval.new(0, 0, 1)
+      cnn.exec "INSERT INTO test_table (test_interval) values (INTERVAL '1 WEEK')"
+      cnn.exec "INSERT INTO test_table (test_interval) values (?)", Interval.new(0, 1, 0)
+      cnn.exec "INSERT INTO test_table (test_interval) values (INTERVAL '1 HOUR')"
+      expected = [
+        Interval.new(0, 0, 12),
+        Interval.new(0, 0, 1),
+        Interval.new(0, 7, 0),
+        Interval.new(0, 1, 0),
+        Interval.new(3_600_000_000, 0, 0)
+      ]
+      results = cnn.query_all("SELECT CAST(test_interval AS INTERVAL) FROM test_table", as: Interval)
+      results.should eq expected
+    end
+  end
+
   it "reads null fields, too" do
     with_cnn do |cnn|
       cnn.exec "CREATE TABLE test_table (i int, b boolean, c varchar)"

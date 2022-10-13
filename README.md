@@ -77,13 +77,40 @@ DB.connect "duckdb://./data.db" do |cnn|
 end
 ```
 
-For an in-memory database:
+For an in-memory database you can use `DuckDB::IN_MEMORY`. 
 
 ```crystal
 require "duckdb"
 
 DB.connect DuckDB::IN_MEMORY do |cnn|
   cnn.scalar("select 'hello world'") # => "hello world"
+end
+```
+
+### Configuration
+
+You can also modify the DuckDB configuration upon opening a database using URI params (together with the URI params available from `crystal-db`).
+
+For more details refer to the [DuckDB configuration documentation](https://duckdb.org/docs/sql/configuration).
+
+Beware that an invalid configuration will raise a `DuckDB::Exception`.
+
+```crystal
+require "duckdb"
+
+# Connect to a database in read-only mode (must be already existing) and with NULL values ordered last by default
+DB.connect "duckdb://./data.db?access_mode=read_only&default_null_order=nulls_last" do |cnn|
+  puts cnn.scalar "SELECT current_setting('access_mode')"  # => read_only
+  puts cnn.scalar "SELECT current_setting('default_null_order')"  # => nulls_last
+end
+```
+
+To configure an in-memory database:
+
+```crystal
+require "duckdb"
+DB.connect "#{DuckDB::IN_MEMORY}?default_null_order=nulls_last" do |cnn|
+  puts cnn.scalar "SELECT current_setting('default_null_order')"  # => nulls_last
 end
 ```
 

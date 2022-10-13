@@ -9,6 +9,7 @@ module DuckDB
     type PreparedStatement = Void*
     type Appender = Void*
     type Arrow = Void*
+    type Config = Void*
 
     enum State
       Success = 0
@@ -131,10 +132,26 @@ module DuckDB
     # Closes the database.
     fun close = duckdb_close(database : Database*) : Void
 
+    # Extended version of duckdb_open. Creates a new database or opens an existing database file stored at the the given path.
+    # configuration used to start up the database system
+    # Returns State::Success on success, or State::Error on failure. [OUT: Database]
+    fun open_ext = duckdb_open_ext(path : LibC::Char*, out_database : Database*, config : Config, out_error : LibC::Char**) : State
+
     # Creates a connection to the specified database. [OUT: connection]
     fun connect = duckdb_connect(database : Database, out_connection : Connection*) : State
     # Closes the specified connection handle
     fun disconnect = duckdb_disconnect(connection : Connection*) : Void
+
+
+    # Initializes an empty configuration object that can be used to provide start-up options for the DuckDB instance
+    # through `open_ext`
+    fun create_config = duckdb_create_config(out_config : Config*) : State
+
+    # Sets the specified option for the specified configuration. The configuration option is indicated by name.
+    fun set_config = duckdb_set_config(config : Config, name : LibC::Char*, option : LibC::Char*) : State
+
+    # Destroys the specified configuration option and de-allocates all memory allocated for the object.
+    fun destroy_config = duckdb_destroy_config(config : Config*) : Void
 
     # Executes the specified SQL query in the specified connection handle. [OUT: result descriptor]
     fun query = duckdb_query(connection : Connection, query : LibC::Char*, out_result : Result*) : State

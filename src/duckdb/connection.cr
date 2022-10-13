@@ -1,11 +1,33 @@
 class DuckDB::Connection < DB::Connection
+
+  CRYSTAL_DB_PARAM_KEYS = %[
+    initial_pool_size
+    max_pool_size
+    max_idle_pool_size
+    checkout_timeout
+    retry_attempts
+    retry_delay
+    prepared_statements
+  ]
+
   def initialize(database)
     super
     filename = self.class.filename(database.uri)
-    if filename == ":memory:"
-      check LibDuckDB.open(nil, out @db)
-    else
+    config_params = self.class.config_params(database.uri)
+    if config_params.empty?
       check LibDuckDB.open(filename, out @db)
+    else
+      LibDuckDB.create_config(out config)
+      begin
+        config_params.each do |key, value|
+          state = LibDuckDB.set_config(config, key, value)
+          raise Exception.new("Configuration error for '#{key}' with value '#{value}'") unless state.success?
+        end
+        state = LibDuckDB.open_ext(filename, out @db, config, out error_msg_p)
+        raise Exception.new(String.new(error_msg_p)) unless state.success?
+      ensure
+        LibDuckDB.destroy_config(pointerof(config))
+      end
     end
     check LibDuckDB.connect(@db, out @conn)
   end
@@ -22,6 +44,11 @@ class DuckDB::Connection < DB::Connection
 
   def self.filename(uri : URI)
     URI.decode_www_form((uri.host || "") + uri.path)
+  end
+
+  def self.config_params(uri : URI)
+    params = HTTP::Params.parse(uri.query || "")
+    params.reject { |param| CRYSTAL_DB_PARAM_KEYS.includes?(param[0]) }
   end
 
   def do_close

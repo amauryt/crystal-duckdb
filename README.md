@@ -6,9 +6,15 @@ Crystal bindings for [DuckDB](https://duckdb.org/), an in-process SQL OLAP datab
 
 Check [crystal-db](https://github.com/crystal-lang/crystal-db) for general DB driver documentation. This shard's driver is registered under the `duckdb://` URI.
 
+## Project status
+
+This is an implementation primarily intended to fulfill my needs for Online Analytical Processing (OLAP) using DuckDB across different languages (Crystal, R, and JS). Therefore, only a subset of the DuckDB C API is implemented, but **it should more than enough for many OLAP applications in Crystal**.
+
+Please note that OLAP workloads and workflows are very different from OLTP (Online Transaction Processing), especially in an embedded context. Before using DuckDB be sure to understand the differences between the two to decide which option is more apt for your use case.
+
 ## DuckDB compatibility
 
-DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file *storage incompability* across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [documentation](https://duckdb.org/docs/sql/statements/export) for more details. 
+DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file *storage incompability* across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [export/import documentation](https://duckdb.org/docs/sql/statements/export) for more details. If supported I suggest using the parquet format.
 
 | Shard release   | DuckDB engine | Notes                                                 |
 | --------------- | ------------- | ----------------------------------------------------- |
@@ -16,17 +22,12 @@ DuckDB is a relatively young but highly exciting project. However, a stable vers
 | 0.2.0           | 0.2.9 – 0.3.2 | Storage incompability.                                |
 | 0.1.x           | 0.2.8         |                                                       |
 
-## Project status
-
-This is an early-stage implementation primarily intended to fulfill my needs for Online Analytical Processing (OLAP) using DuckDB. My main use case is to efficiently transfer values from Crystal, via the append functionality of DuckDB, in order to populate a larger-than-memory database with which to do exploratory data analysis in [R](https://www.r-project.org/). Obviously this could be also be extended to Python or any other language with a DuckDB client. Therefore, at the moment it only a subset of the DuckDB C API is implemented, but it should enough for many OLAP applications in Crystal.
-
-Please note that OLAP workloads and workflows are very different from OLTP (Online Transaction Processing), especially in an embedded context. Before using DuckDB be sure to understand the differences between the two to decide which option is more apt for your use case.
 
 ## Prerequisites
 
 You must have a **compatible DuckDB engine** installed and available as a dynamic library within your app.
 
-For MacOS the simplest way to install DuckDB is via homebrew:
+For MacOS (and many Linux distributions) the simplest way to install DuckDB is via homebrew:
 
 ```
 brew install duckdb
@@ -98,7 +99,7 @@ Beware that an invalid configuration will raise a `DuckDB::Exception`.
 ```crystal
 require "duckdb"
 
-# Connect to a database in read-only mode (must be already existing) and with NULL values ordered last by default
+# Connect to a database in read-only mode (file must already exists) and with NULL values ordered last by default
 DB.connect "duckdb://./data.db?access_mode=read_only&default_null_order=nulls_last" do |cnn|
   puts cnn.scalar "SELECT current_setting('access_mode')"  # => read_only
   puts cnn.scalar "SELECT current_setting('default_null_order')"  # => nulls_last
@@ -116,7 +117,7 @@ end
 
 ### Appender
 
-To efficiently load bulk data a table use the appender instead of insert statements.
+To efficiently load bulk data into a table use the appender instead of insert statements.
 The [Appender](https://duckdb.org/docs/api/c/appender) is tied to a connection, and will use the transaction context of that connection when appending.
 An Appender always appends to a single table in the database.
 
@@ -182,8 +183,8 @@ Please note the following:
 
 * As DuckDB does not support timezones without an extension, all Crystal's `Time` instances **must be in UTC**
 * Crystal's `Time` and `Time::Span` resolutions are in nanoseconds while DuckDB's 'TIME' is in microseconds, thus beware of **loss of precision while converting between structs** (where integer division is used)
-* Creating a new `DuckDB::TimeOfDay` from a `Time::Span` greater or equal than a day raises `DuckDB::Exception`
-* Converting a `DuckDB::Interval` with a non-zero month value to `Time::Span` without specifying the number of days per month raises `DuckDB::Exception`
+* Creating a new `DuckDB::TimeOfDay` from a `Time::Span` greater or equal than a day raises a `DuckDB::Exception`
+* Converting a `DuckDB::Interval` with a non-zero month value to `Time::Span` without specifying the number of days per month raises a `DuckDB::Exception`
 
 ```crystal
 require "duckdb"
@@ -276,6 +277,8 @@ end
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+Be sure to run the specs with `crystal spec` before commiting and, if necessary, add the related specs for your new feature or change.
 
 ## Contributors
 

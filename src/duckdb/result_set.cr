@@ -11,7 +11,7 @@ class DuckDB::ResultSet < DB::ResultSet
   end
 
   macro duckdb_set_string
-    lib_value = duckdb_value("varchar")
+    lib_value = duckdb_value("string")
     string = String.new(lib_value)
     LibDuckDB.free(lib_value)
     string

@@ -216,8 +216,8 @@ module DuckDB
     fun value_timestamp = duckdb_value_timestamp(result : Result*, col : Idx, row : Idx) : Timestamp
     # Converts the specified value to a interval. Returns 0 on failure.
     fun value_interval = duckdb_value_interval(result : Result*, col : Idx, row : Idx) : Interval
-    # Converts the specified value to a string. Returns nullptr on failure or NULL. The result must be freed with `free`.
-    fun value_varchar = duckdb_value_varchar(result : Result*, col : Idx, row : Idx) : LibC::Char*
+    # Converts the specified value to a string. Supports strings with null bytes. The result must be freed with `free`.
+    fun value_string = duckdb_value_string(result : Result*, col : Idx, row : Idx) : LibC::Char*  
     # Fetches a blob from a result set column. Returns a blob with blob.data set to nullptr on failure or NULL. The
     # resulting "blob.data" must be freed with duckdb_free.
     fun value_blob = duckdb_value_blob(result : Result*, col : Idx, row : Idx) : Blob
@@ -229,7 +229,7 @@ module DuckDB
     # Allocate [size] amounts of memory using the duckdb internal malloc function. Any memory allocated in this manner
     # should be freed using duckdb_free
     fun malloc = duckdb_malloc(size : LibC::SizeT) : Void*
-    # Free a value returned from `malloc`, `value_varchar` or `value_blob`
+    # Free a value returned from `malloc`, `value_string`, or `value_blob`
     fun free = duckdb_free(ptr : Void*) : Void
 
     # # Prepared Statements

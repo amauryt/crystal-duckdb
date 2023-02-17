@@ -158,6 +158,7 @@ The following DuckDB [SQL datatypes](https://duckdb.org/docs/sql/data_types/over
 | `Int16`             | SMALLINT            |
 | `Int32`             | INTEGER             |
 | `Int64`             | BIGINT              |
+| `Int128`            | HUGEINT             |
 | `UInt8`             | UTINYINT            |
 | `UInt16`            | USMALLINT           |
 | `UInt32`            | UINTEGER            |

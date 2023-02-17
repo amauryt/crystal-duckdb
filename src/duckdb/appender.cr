@@ -44,6 +44,11 @@ class DuckDB::Appender
     end
   {% end %}
 
+  def <<(value : Int128)
+    check LibDuckDB.append_hugeint(self, HugeIntHelper.i128_to_huge(value)), value
+    self
+  end
+
   def <<(value : Float32)
     check LibDuckDB.append_float(self, value), value
     self

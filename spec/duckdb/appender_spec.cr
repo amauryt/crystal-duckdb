@@ -43,6 +43,7 @@ describe DuckDB::Appender do
   it_appends DuckDB::TimeOfDay, "TIME", DuckDB::TimeOfDay.new(10, 2, 1)
   it_appends DuckDB::Timestamp, "TIMESTAMP", DuckDB::Timestamp.new(Time::UNIX_EPOCH)
   it_appends DuckDB::Interval, "INTERVAL", DuckDB::Interval.new(1, 0, 0)
+  it_appends Int128, "HUGEINT", 170141183460469231731687303715884105727_i128
 
   ary = UInt8[0x44, 0x75, 0x63, 0x6b, 0x44, 0x42]
   it_appends Bytes, "BLOB", Bytes.new(ary.to_unsafe, ary.size)

@@ -37,6 +37,10 @@ class DuckDB::Statement < DB::Statement
     end
   {% end %}
 
+  private def bind_arg(index, value : Int128)
+    check LibDuckDB.bind_hugeint(self, index, HugeIntHelper.i128_to_huge(value))
+  end
+
   private def bind_arg(index, value : Float32)
     check LibDuckDB.bind_float(self, index, value)
   end

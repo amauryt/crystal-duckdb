@@ -14,5 +14,5 @@ module DuckDB
 
   TIMEZONE = Time::Location::UTC
 
-  alias Any = DB::Any | Int8 | Int16 | UInt8 | UInt16 | UInt32 | UInt64 | DuckDB::Date | DuckDB::TimeOfDay | DuckDB::Timestamp | DuckDB::Interval
+  alias Any = DB::Any | Int8 | Int16 | UInt8 | UInt16 | UInt32 | UInt64 | DuckDB::Date | DuckDB::TimeOfDay | DuckDB::Timestamp | DuckDB::Interval | Int128
 end

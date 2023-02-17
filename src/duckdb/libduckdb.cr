@@ -48,9 +48,9 @@ module DuckDB
       DATE
       # Treated as `DuckDB::TimeOfDay`.
       TIME
-      # duckdb_interval
+      # Treated as `DuckDB::Interval`.
       INTERVAL
-      # Treated as `Int128`, if supported.
+      # Treated as `Int128`.
       HUGEINT
       # Treated as `String`.
       VARCHAR
@@ -196,6 +196,8 @@ module DuckDB
     fun value_int32 = duckdb_value_int32(result : Result*, col : Idx, row : Idx) : Int32
     # Converts the specified value to an int64_t. Returns 0 on failure or NULL.
     fun value_int64 = duckdb_value_int64(result : Result*, col : Idx, row : Idx) : Int64
+    # Converts the specified value to an huge_int_t. Returns 0 on failure or NULL.
+    fun value_hugeint = duckdb_value_hugeint(result : Result*, col : Idx, row : Idx) : HugeInt
     # Converts the specified value to an uint8_t. Returns 0 on failure or NULL.
     fun value_uint8 = duckdb_value_uint8(result : Result*, col : Idx, row : Idx) : UInt8
     # Converts the specified value to an uint16_t. Returns 0 on failure or NULL.
@@ -216,7 +218,8 @@ module DuckDB
     fun value_timestamp = duckdb_value_timestamp(result : Result*, col : Idx, row : Idx) : Timestamp
     # Converts the specified value to a interval. Returns 0 on failure.
     fun value_interval = duckdb_value_interval(result : Result*, col : Idx, row : Idx) : Interval
-    # Converts the specified value to a string. Supports strings with null bytes. The result must be freed with `free`.
+    # Converts the specified value to a string. Supports strings with null bytes and replaces `value_varchar`.
+    # The result must be freed with `free`.
     fun value_string = duckdb_value_string(result : Result*, col : Idx, row : Idx) : LibC::Char*  
     # Fetches a blob from a result set column. Returns a blob with blob.data set to nullptr on failure or NULL. The
     # resulting "blob.data" must be freed with duckdb_free.
@@ -245,6 +248,7 @@ module DuckDB
     fun bind_int16 = duckdb_bind_int16(prepared_statement : PreparedStatement, param_idx : Idx, val : Int16) : State
     fun bind_int32 = duckdb_bind_int32(prepared_statement : PreparedStatement, param_idx : Idx, val : Int32) : State
     fun bind_int64 = duckdb_bind_int64(prepared_statement : PreparedStatement, param_idx : Idx, val : Int64) : State
+    fun bind_hugeint = duckdb_bind_hugeint(prepared_statement : PreparedStatement, param_idx : Idx, val : HugeInt) : State
     fun bind_uint8 = duckdb_bind_uint8(prepared_statement : PreparedStatement, param_idx : Idx, val : UInt8) : State
     fun bind_uint16 = duckdb_bind_uint16(prepared_statement : PreparedStatement, param_idx : Idx, val : UInt16) : State
     fun bind_uint32 = duckdb_bind_uint32(prepared_statement : PreparedStatement, param_idx : Idx, val : UInt32) : State
@@ -278,6 +282,8 @@ module DuckDB
     fun append_int16 = duckdb_append_int16(appender : Appender, value : Int16) : State
     fun append_int32 = duckdb_append_int32(appender : Appender, value : Int32) : State
     fun append_int64 = duckdb_append_int64(appender : Appender, value : Int64) : State
+      
+    fun append_hugeint = duckdb_append_hugeint(appender : Appender, value : HugeInt) : State
 
     fun append_uint8 = duckdb_append_uint8(appender : Appender, value : UInt8) : State
     fun append_uint16 = duckdb_append_uint16(appender : Appender, value : UInt16) : State

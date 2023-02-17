@@ -83,6 +83,8 @@ class DuckDB::ResultSet < DB::ResultSet
       when .interval?
         lib_i = duckdb_value("interval")
         Interval.new lib_i.micros, lib_i.days, lib_i.months
+      when .hugeint?
+        HugeIntHelper.huge_to_i128(duckdb_value("hugeint"))
       else
         # Treat non supported types as strings
         duckdb_set_string

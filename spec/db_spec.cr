@@ -44,6 +44,7 @@ DB::DriverSpecs(DuckDB::Any).run do
   sample_value 1_i16, "SMALLINT", "1", type_safe_value: false
   sample_value 1, "INTEGER", "1", type_safe_value: false
   sample_value 1_i64, "BIGINT", "1", type_safe_value: false
+  sample_value 1_i128, "HUGEINT", "1", type_safe_value: false
   sample_value 1_u8, "UTINYINT", "1", type_safe_value: false
   sample_value 1_u16, "USMALLINT", "1", type_safe_value: false
   sample_value 1_u32, "UINTEGER", "1", type_safe_value: false
@@ -56,7 +57,7 @@ DB::DriverSpecs(DuckDB::Any).run do
   sample_value timestamp, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false
   sample_value DuckDB::TimeOfDay.new(10, 11, 12), "TIME", "'10:11:12'", type_safe_value: false # second
   sample_value DuckDB::Interval.new(0, 1, 0), "INTERVAL", "'1 DAY'", type_safe_value: false
-  sample_value timestamp.to_time, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false
+  sample_value timestamp.to_time, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false  
 
   ary = UInt8[0x44, 0x75, 0x63, 0x6b, 0x44, 0x42]
   sample_value Bytes.new(ary.to_unsafe, ary.size), "BLOB", "'DuckDB'" # , type_safe_value: false

@@ -6,10 +6,6 @@ class DuckDB::ResultSet < DB::ResultSet
     LibDuckDB.value_{{kind.id}}(self, @column_index, @row_index)
   end
 
-  macro duckdb_unbox(from, to)
-    {{to}}.new(Box({{from}}).unbox(column.data))
-  end
-
   macro duckdb_set_string
     lib_value = duckdb_value("string")
     string = String.new(lib_value)

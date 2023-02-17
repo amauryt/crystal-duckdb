@@ -18,7 +18,7 @@ DuckDB is a relatively young but highly exciting project. However, a stable vers
 
 | Shard release   | DuckDB engine | Notes                                                 |
 | --------------- | ------------- | ----------------------------------------------------- |
-| 0.2.2           | 0.5.1 - 0.6.0 | Added support for interval datatype and configuraton. |
+| 0.2.2           | 0.5.1 — 0.6.0 | Added support for interval datatype and configuraton. |
 | 0.2.1           | 0.3.4 – 0.5.1 | Storage incompability. Updated `crystal-db` to v0.11. |
 | 0.2.0           | 0.2.9 – 0.3.2 | Storage incompability.                                |
 | 0.1.x           | 0.2.8         |                                                       |

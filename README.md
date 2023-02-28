@@ -17,8 +17,9 @@ Please note that OLAP workloads and workflows are very different from OLTP (Onli
 DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file *storage incompability* across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [export/import documentation](https://duckdb.org/docs/sql/statements/export) for more details. If supported I suggest using the parquet format.
 
 | Shard release   | DuckDB engine | Notes                                                 |
-| --------------- | ------------- | ----------------------------------------------------- |
-| 0.2.2           | 0.5.1 — 0.6.0 | Added support for interval datatype and configuraton. |
+| --------------- | ------------- | ------------------------------------------------------|
+| 0.2.3           | 0.6.0 – 0.7.x | Added support for hugeint. Changed varchar C API.     |
+| 0.2.2           | 0.5.1 – 0.6.0 | Added support for interval datatype and configuration.|
 | 0.2.1           | 0.3.4 – 0.5.1 | Storage incompability. Updated `crystal-db` to v0.11. |
 | 0.2.0           | 0.2.9 – 0.3.2 | Storage incompability.                                |
 | 0.1.x           | 0.2.8         |                                                       |

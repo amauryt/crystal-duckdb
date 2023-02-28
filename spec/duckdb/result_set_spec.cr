@@ -29,7 +29,7 @@ describe DuckDB::ResultSet do
     with_db do |db|
       db.exec "CREATE TABLE test_table (test_date datetime)"
       timestamp = Time.utc
-      db.exec "INSERT INTO test_table (test_date) values (current_timestamp)"
+      db.exec "INSERT INTO test_table (test_date) values (?)", timestamp.to_s
       db.query("SELECT test_date FROM test_table") do |rs|
         rs.each do
           rs.read(Time).should be_close(timestamp, 1.second)
@@ -43,7 +43,6 @@ describe DuckDB::ResultSet do
       db.exec "CREATE TABLE test_table (test_date timestamp)"
       timestamp = Timestamp.new(Time.utc)
       db.exec "INSERT INTO test_table (test_date) values (?)", timestamp.to_s
-      db.exec "INSERT INTO test_table (test_date) values (current_timestamp)"
       db.query("SELECT CAST(test_date as TIMESTAMP) FROM test_table") do |rs|
         rs.each do
           rs.read(Timestamp).to_time.should be_close(timestamp.to_time, 1.second)

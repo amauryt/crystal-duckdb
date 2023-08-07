@@ -1,29 +1,42 @@
 class DuckDB::Connection < DB::Connection
+  record Options, filename : String, config_params : Array(Tuple(String, String)) do
+    CRYSTAL_DB_PARAM_KEYS = %[
+      initial_pool_size
+      max_pool_size
+      max_idle_pool_size
+      checkout_timeout
+      retry_attempts
+      retry_delay
+      prepared_statements
+    ]
 
-  CRYSTAL_DB_PARAM_KEYS = %[
-    initial_pool_size
-    max_pool_size
-    max_idle_pool_size
-    checkout_timeout
-    retry_attempts
-    retry_delay
-    prepared_statements
-  ]
+    def initialize(@filename, @config_params)
+    end
 
-  def initialize(database)
-    super
-    filename = self.class.filename(database.uri)
-    config_params = self.class.config_params(database.uri)
-    if config_params.empty?
-      check LibDuckDB.open(filename, out @db)
+    def self.from_uri(uri : URI)
+      filename = URI.decode_www_form((uri.host || "") + uri.path)
+      config_params = parse_config_params(uri)
+      Options.new(filename, config_params)
+    end
+
+    def self.parse_config_params(uri : URI)
+      params = HTTP::Params.parse(uri.query || "")
+      params.reject { |param| CRYSTAL_DB_PARAM_KEYS.includes?(param[0]) }
+    end
+  end
+
+  def initialize(options : ::DB::Connection::Options, duckdb_options : Options)
+    super(options)
+    if duckdb_options.config_params.empty?
+      check LibDuckDB.open(duckdb_options.filename, out @db)
     else
       LibDuckDB.create_config(out config)
       begin
-        config_params.each do |key, value|
+        duckdb_options.config_params.each do |key, value|
           state = LibDuckDB.set_config(config, key, value)
           raise Exception.new("Configuration error for '#{key}' with value '#{value}'") unless state.success?
         end
-        state = LibDuckDB.open_ext(filename, out @db, config, out error_msg_p)
+        state = LibDuckDB.open_ext(duckdb_options.filename, out @db, config, out error_msg_p)
         raise Exception.new(String.new(error_msg_p)) unless state.success?
       ensure
         LibDuckDB.destroy_config(pointerof(config))
@@ -40,15 +53,6 @@ class DuckDB::Connection < DB::Connection
     appender = Appender.new(self, table_name)
     yield appender
     appender.close
-  end
-
-  def self.filename(uri : URI)
-    URI.decode_www_form((uri.host || "") + uri.path)
-  end
-
-  def self.config_params(uri : URI)
-    params = HTTP::Params.parse(uri.query || "")
-    params.reject { |param| CRYSTAL_DB_PARAM_KEYS.includes?(param[0]) }
   end
 
   def do_close

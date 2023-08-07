@@ -22,7 +22,7 @@ private def cast_if_necessary(expr, sql_type)
   end
 end
 
-DB::DriverSpecs(DuckDB::Any).run do
+DB::DriverSpecs(DuckDB::Any).run do |ctx|
   support_unprepared true
 
   before do
@@ -116,7 +116,7 @@ DB::DriverSpecs(DuckDB::Any).run do
     db.exec %(insert into a (i, str) values (23, 'bai bai');)
 
     2.times do |i|
-      DB.open db.uri do |db|
+      DB.open ctx.connection_string do |db|
         begin
           db.query("SELECT i, str FROM a WHERE i = ?", 23) do |rs|
             rs.move_next

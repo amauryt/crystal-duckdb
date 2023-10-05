@@ -1,5 +1,5 @@
 class DuckDB::Connection < DB::Connection
-  record Options, filename : String, config_params : Array(Tuple(String, String)) do
+  record Options, filename : String, config_params : Hash(String, String) do
     CRYSTAL_DB_PARAM_KEYS = %[
       initial_pool_size
       max_pool_size
@@ -15,13 +15,12 @@ class DuckDB::Connection < DB::Connection
 
     def self.from_uri(uri : URI)
       filename = URI.decode_www_form((uri.host || "") + uri.path)
-      config_params = parse_config_params(uri)
-      Options.new(filename, config_params)
-    end
-
-    def self.parse_config_params(uri : URI)
       params = HTTP::Params.parse(uri.query || "")
-      params.reject { |param| CRYSTAL_DB_PARAM_KEYS.includes?(param[0]) }
+      config_params = Hash(String, String).new
+      params.each do |param|
+        config_params[param[0]] = param[1] unless CRYSTAL_DB_PARAM_KEYS.includes?(param[0])
+      end
+      Options.new(filename, config_params)
     end
   end
 

@@ -3,28 +3,21 @@ name: Crystal CI
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '0 10 1 * *' # At 10:00 on day-of-month 1.
 
 jobs:
   test:
     strategy:
       fail-fast: false
-      matrix:
-        os: [macos-latest]
-        crystal: [latest, nightly]
-    runs-on: ${{ matrix.os  }}
+    runs-on: macos-latest
     env:
       DYLD_LIBRARY_PATH: /usr/local/lib/
+      CRYSTAL_LIBRARY_PATH: /usr/local/lib/
     steps:
-      - name: Install duckdb
+      - name: Install duckdb and crystal
         run: |
           brew update
           brew install duckdb
-      - name: Install Crystal
-        uses: oprypin/install-crystal@v1
-        with:
-          crystal: ${{ matrix.crystal }}
+          brew install crystal
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Install dependencies

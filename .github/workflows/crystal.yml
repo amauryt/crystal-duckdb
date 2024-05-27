@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-latest
     env:
       DYLD_LIBRARY_PATH: /usr/local/lib/
-      CRYSTAL_LIBRARY_PATH: /usr/local/lib/
+      CRYSTAL_LIBRARY_PATH: /opt/homebrew/lib/
     steps:
       - name: Install duckdb and crystal
         run: |

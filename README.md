@@ -9,16 +9,19 @@ Check [crystal-db](https://github.com/crystal-lang/crystal-db) for general DB dr
 ## Project status
 
 This is an implementation primarily intended to fulfill my needs for Online Analytical Processing (OLAP) using DuckDB across different languages (Crystal, R, and JS). Therefore, only a subset of the DuckDB C API is implemented, but **it should more than enough for many OLAP applications in Crystal**.
+Moreover, with the release of DuckDB v1.0, this subset of features has now reached a high level of stability.
 
 Please note that OLAP workloads and workflows are very different from OLTP (Online Transaction Processing), especially in an embedded context. Before using DuckDB be sure to understand the differences between the two to decide which option is more apt for your use case.
 
 ## DuckDB compatibility
 
-DuckDB is a relatively young but highly exciting project. However, a stable version is yet to be reached and in the meantime **breaking changes are expected**. Be sure to use the correct shard version and to consult the respective README file for your version of the DuckDB engine. In addition, there might be DB file *storage incompability* across different versions of DuckDB engines, in this case you need to export your data with the old engine and import it with the new engine; see the [export/import documentation](https://duckdb.org/docs/sql/statements/export) for more details. If supported I suggest using the parquet format.
+The DuckDB engine has recently released their first stable version (v1.0), hence breaking changes in the near future are now unlikely to occur.
+
+If you are using a non-stable version of the engine, be sure to use the correct shard version. In addition, there might be DB file *storage incompability* across different versions of the DuckDB engines before v1.0. In this case you need to export your data with the old engine and import it with the new engine; see the [export/import documentation](https://duckdb.org/docs/sql/statements/export) for more details. If supported, I suggest using the parquet format.
 
 | Shard release   | DuckDB engine    | Notes                                                 |
 | --------------- | -----------------| ------------------------------------------------------|
-| 0.2.5           |  0.9.x – 0.10.x  | Storage compability. Updated `crystal-db` to v0.13.   |
+| 0.2.5           |  0.9.x – 1.0.x   | Storage compability. Updated `crystal-db` to v0.13.   |
 | 0.2.4           |  0.9.x – 0.10.x  | Storage incompability. Updated `crystal-db` to v0.12. |
 | 0.2.3           |  0.6.0 – 0.8.x   | Added support for hugeint. Changed varchar C API.     |
 | 0.2.2           |  0.5.1 – 0.6.0   | Added support for interval datatype and configuration.|

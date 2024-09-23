@@ -21,7 +21,7 @@ If you are using a non-stable version of the engine, be sure to use the correct 
 
 | Shard release   | DuckDB engine    | Notes                                                 |
 | --------------- | -----------------| ------------------------------------------------------|
-| 0.2.5           |  0.9.x – 1.0.x   | Storage compability. Updated `crystal-db` to v0.13.   |
+| 0.2.5           |  0.9.x – 1.1.x   | Storage compability. Updated `crystal-db` to v0.13.   |
 | 0.2.4           |  0.9.x – 0.10.x  | Storage incompability. Updated `crystal-db` to v0.12. |
 | 0.2.3           |  0.6.0 – 0.8.x   | Added support for hugeint. Changed varchar C API.     |
 | 0.2.2           |  0.5.1 – 0.6.0   | Added support for interval datatype and configuration.|

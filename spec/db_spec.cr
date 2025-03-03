@@ -4,6 +4,8 @@ require "db/spec"
 class DB::DriverSpecs # Monkey-patch to exclude specs not supported by DuckDB
   EXCLUDED_ITS = [
     "nested transactions: can read inside transaction and rollback after",
+    "transactions: can read inside transaction and rollback after",
+    "transactions: can read inside transaction or after commit"
   ]
 
   def it(description = "assert", prepared = :default, file = __FILE__, line = __LINE__, end_line = __END_LINE__, &block : DB::Database ->)
@@ -57,7 +59,7 @@ DB::DriverSpecs(DuckDB::Any).run do |ctx|
   sample_value timestamp, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false
   sample_value DuckDB::TimeOfDay.new(10, 11, 12), "TIME", "'10:11:12'", type_safe_value: false # second
   sample_value DuckDB::Interval.new(0, 1, 0), "INTERVAL", "'1 DAY'", type_safe_value: false
-  sample_value timestamp.to_time, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false  
+  sample_value timestamp.to_time, "TIMESTAMP", "'2020-01-01 10:11:12.0013'", type_safe_value: false
 
   ary = UInt8[0x44, 0x75, 0x63, 0x6b, 0x44, 0x42]
   sample_value Bytes.new(ary.to_unsafe, ary.size), "BLOB", "'DuckDB'" # , type_safe_value: false

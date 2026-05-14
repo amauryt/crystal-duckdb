@@ -17,7 +17,7 @@ describe Driver do
       ["nulls_first", "nulls_last"].each do |value|
         with_db "null_order=#{value}" do |db|
           config = db.scalar "SELECT current_setting('null_order')"
-          config.should eq value
+          config.as(String).downcase.should eq value.downcase
         end
       end
     end

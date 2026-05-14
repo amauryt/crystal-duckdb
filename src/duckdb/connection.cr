@@ -14,7 +14,15 @@ class DuckDB::Connection < DB::Connection
     end
 
     def self.from_uri(uri : URI)
-      filename = URI.decode_www_form((uri.host || "") + uri.path)
+      raw_host = uri.host || ""
+      # Crystal's URI parser wraps colon-separated hosts in IPv6 brackets,
+      # so duckdb://%3Amemory%3A becomes host "[:memory:]".
+      # Detect and recover the real in-memory marker.
+      if raw_host == "[:memory:]"
+        filename = ":memory:"
+      else
+        filename = URI.decode_www_form(raw_host + uri.path)
+      end
       params = HTTP::Params.parse(uri.query || "")
       config_params = Hash(String, String).new
       params.each do |param|

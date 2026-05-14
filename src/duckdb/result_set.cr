@@ -18,7 +18,7 @@ class DuckDB::ResultSet < DB::ResultSet
   end
 
   def initialize(@statement : UnpreparedStatement)
-    check LibDuckDB.query(@statement.connection, @statement.command, out @result)
+    check LibDuckDB.query(@statement.connection.as(DuckDB::LibDuckDB::Connection), @statement.command, out @result)
   end
 
   protected def do_close
